@@ -335,7 +335,7 @@ fun PlaylistMenu(
                                     )
                                 }
                             },
-                        )
+                        ),
                         NewAction(
                             icon = {
                                 Icon(
