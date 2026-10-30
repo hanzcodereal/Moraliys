@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: Moraliys
     steps:
       - uses: actions/checkout@v4
 
@@ -27,4 +30,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: moraliys-debug-apk
-          path: app/build/outputs/apk/foss/debug/*.apk
+          path: Moraliys/app/build/outputs/apk/foss/debug/*.apk
