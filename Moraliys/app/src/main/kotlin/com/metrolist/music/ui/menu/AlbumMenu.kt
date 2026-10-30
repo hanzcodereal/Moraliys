@@ -316,7 +316,7 @@ fun AlbumMenu(
                                     )
                                 }
                             },
-                        )
+                        ),
 
                         NewAction(
                             icon = {
