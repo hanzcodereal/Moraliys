@@ -7,7 +7,7 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
-val baseApplicationId = "com.metrolist.music"
+val baseApplicationId = "com.moraliys.music"
 val applicationIdOverride = System.getenv("METROLIST_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("METROLIST_APP_NAME")?.takeIf { it.isNotBlank() }
 val buildCommit =
@@ -29,7 +29,6 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -40,7 +39,7 @@ android {
         applicationId = applicationIdOverride ?: baseApplicationId
         minSdk = 26
         targetSdk = 36
-        versionCode = 153
+        versionCode = 1
         versionName = "1.0.0"
         val baseVersionName = requireNotNull(versionName)
         buildConfigField("String", "BASE_VERSION_NAME", "\"$baseVersionName\"")
@@ -54,14 +53,7 @@ android {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
         }
 
-        // LastFM API keys from GitHub Secrets
-        val lastFmKey = localProperties.getProperty("LASTFM_API_KEY") ?: System.getenv("LASTFM_API_KEY") ?: ""
-        val lastFmSecret = localProperties.getProperty("LASTFM_SECRET") ?: System.getenv("LASTFM_SECRET") ?: ""
-
-        buildConfigField("String", "LASTFM_API_KEY", "\"$lastFmKey\"")
-        buildConfigField("String", "LASTFM_SECRET", "\"$lastFmSecret\"")
         buildConfigField("String", "ARCHITECTURE", "\"universal\"")
-        buildConfigField("Long", "DISCORD_APP_ID", "1447278780795064401L")
     }
 
     flavorDimensions += listOf("variant")
@@ -71,14 +63,14 @@ android {
             dimension = "variant"
             isDefault = true
             buildConfigField("Boolean", "CAST_AVAILABLE", "false")
-            buildConfigField("Boolean", "UPDATER_AVAILABLE", "true")
+            buildConfigField("Boolean", "UPDATER_AVAILABLE", "false")
         }
 
         // GMS - Updater and gcast
         create("gms") {
             dimension = "variant"
             buildConfigField("Boolean", "CAST_AVAILABLE", "true")
-            buildConfigField("Boolean", "UPDATER_AVAILABLE", "true")
+            buildConfigField("Boolean", "UPDATER_AVAILABLE", "false")
         }
 
         // IzzyOnDroid - no gcast, no updater - the ONLY F-droid compliant build
@@ -133,7 +125,7 @@ android {
             }
             isDebuggable = true
             if (appNameOverride == null) {
-                resValue("string", "app_name", "Metrolist Debug")
+                resValue("string", "app_name", "Moraliys Debug")
             }
             signingConfig =
                 if (workflowDebugKeystoreFile != null) {
@@ -203,28 +195,6 @@ android {
             excludes += "META-INF/io.netty.versions.properties"
         }
     }
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
-    }
-    generateProtoTasks {
-        all().configureEach {
-            builtins {
-                create("java") { option("lite") }
-                create("kotlin") { option("lite") }
-            }
-        }
-    }
-}
-
-val cleanLegacyProtoSources = tasks.register<Delete>("cleanLegacyProtoSources") {
-    delete(layout.projectDirectory.dir("src/main/java/com/metrolist/music/listentogether/proto"))
-}
-
-tasks.named("preBuild") {
-    dependsOn(cleanLegacyProtoSources)
 }
 
 ksp {
@@ -306,10 +276,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.encoding)
     implementation(libs.ktor.serialization.json)
-
-    // Protobuf for message serialization (lite version for Android)
-    implementation(libs.protobuf.javalite)
-    implementation(libs.protobuf.kotlin.lite)
 
     coreLibraryDesugaring(libs.desugaring)
 
