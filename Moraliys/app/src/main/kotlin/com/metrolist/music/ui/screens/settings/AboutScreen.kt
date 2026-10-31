@@ -167,25 +167,6 @@ fun AboutScreen(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Surface(
-                        modifier = Modifier.size(110.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                        tonalElevation = 4.dp,
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(R.drawable.small_icon),
-                                contentDescription = DEVELOPER_NAME,
-                                colorFilter = ColorFilter.tint(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    blendMode = BlendMode.SrcIn,
-                                ),
-                                modifier = Modifier.size(56.dp)
-                            )
-                        }
-                    }
-
                     Column(
                         verticalArrangement = Arrangement.Center
                     ) {
