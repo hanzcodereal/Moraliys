@@ -290,7 +290,7 @@ fun YouTubeAlbumMenu(
                                     }
                                 }
                             },
-                        )
+                        ),
                         NewAction(
                             icon = {
                                 Icon(
